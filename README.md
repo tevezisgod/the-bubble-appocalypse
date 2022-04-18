@@ -5,6 +5,7 @@ The bubble appocalypse - a Pang clone
 How to play?
 
 PC\Mac - use either the arrow keys or wasd to move, and the left mouse button or the spaceBar to shoot.
+
 Mobile - drag anywhere to move, tap anywhere to shoot
 
 My work process
