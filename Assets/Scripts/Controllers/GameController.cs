@@ -17,15 +17,18 @@ namespace Controllers
     {
         [SerializeField] private BallsController ballsController;
         [SerializeField] private PlayerController player;
-        
+
         //Static global objects
         public static Controls GameControls;
         public static GameConfig Config;
         
-        private GameUiView _gameUiView;
+        //private internal variables
         private bool _gameIsFinished;
-        private int _currentPlayerLevel = 0;
+        private int _currentPlayerLevel;
         private int _levelAmount;
+        
+        //reference to view
+        private GameUiView _gameUiView;
         public static LevelConfig CurrentLevelConfig { get; private set;}
 
         //events
@@ -40,9 +43,7 @@ namespace Controllers
 
         public delegate void GameWon();
         public static event GameWon OnGameWon;
-
-        #region Game Setup and Initiation
-
+        
         public void Init(GameDataModel model,GameUiView view)
         {
             _gameUiView = view;
@@ -53,6 +54,8 @@ namespace Controllers
             GenerateGame();
             ballsController.OnBallsListEmpty += NoMoreBallsOnScreen;
         }
+
+        #region Game Setup and Initiation
         
         private void SetInputControls()
         {
