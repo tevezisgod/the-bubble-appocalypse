@@ -8,7 +8,8 @@ namespace Controllers
     {
         [SerializeField] private WeaponController weaponController;
         [SerializeField] private PlayerView playerView;
-        internal bool MoveButtonPressed { get; private set; }
+        
+        private bool _moveButtonPressed;
         private bool _canMove;
         private float _movementOrientation;
 
@@ -34,26 +35,25 @@ namespace Controllers
         private void OnPlayerMoved(InputAction.CallbackContext callbackContext)
         {
             if (!_canMove) return;
-            if (MoveButtonPressed) return;
-            MoveButtonPressed = true;
+            if (_moveButtonPressed) return;
+            _moveButtonPressed = true;
             var move = callbackContext.ReadValue<Vector2>();
             MovePlayer(move);
         }
         private async void MovePlayer(Vector2 move)
         {
-            while (MoveButtonPressed && playerView._playerRigidbody !=null)
+            while (_moveButtonPressed && playerView._playerRigidbody !=null)
             {
                 _movementOrientation = move.x * GameController.Config.PlayerSpeed;
                 var playerRigidbody = playerView._playerRigidbody;
                 playerRigidbody.MovePosition(playerRigidbody.position + Vector2.right * (_movementOrientation * Time.fixedDeltaTime));
                 await Task.Yield();
-
             }
         }
 
         private void OnPlayerStopped(InputAction.CallbackContext callbackContext)
         {
-            if(MoveButtonPressed) MoveButtonPressed = false;
+            if(_moveButtonPressed) _moveButtonPressed = false;
         }
         
         private void OnFirePressed(InputAction.CallbackContext obj)

@@ -148,9 +148,10 @@ namespace Controllers
         
         private void OnBallPopped(SingleBallController poppedball)
         {
-            if (poppedball.BallScale >= GameController.Config.MinimumBallSize)
+            var ballScale = poppedball.GetComponent<Transform>().localScale.x;
+            if (ballScale >= GameController.Config.MinimumBallSize)
             {
-                SplitBall(poppedball.BallScale, poppedball._ballRigidbody.position);
+                SplitBall(ballScale, poppedball.GetComponent<Rigidbody2D>().position);
             }
             RemoveBallFromTracking(poppedball);
             poppedball.OnBallPopped -= OnBallPopped;

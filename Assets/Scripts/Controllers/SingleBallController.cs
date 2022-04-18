@@ -10,8 +10,7 @@ namespace Controllers
 
     public class SingleBallController : MonoBehaviour, IBallController
     {
-        internal Rigidbody2D _ballRigidbody;
-        internal float BallScale;
+        private Rigidbody2D _ballRigidbody;
         
         //events
         public delegate void BallPopped(SingleBallController poppedBall);
@@ -22,7 +21,6 @@ namespace Controllers
             //TODO: need to refactor and move some things to view class
             _ballRigidbody = GetComponent<Rigidbody2D>();
             _ballRigidbody.AddForce(startForce, ForceMode2D.Impulse);
-            BallScale = GetComponent<Transform>().localScale.x;
             GetComponent<SpriteRenderer>().color = Random.ColorHSV();
         }
 
