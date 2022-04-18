@@ -154,6 +154,17 @@
                 },
                 {
                     "name": "",
+                    "id": "e402ec0b-c380-4ad4-8344-a92186ec7990",
+                    "path": "<Touchscreen>/primaryTouch/delta",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "55e07b78-8823-4a18-82a1-c7483fd3dd44",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -167,6 +178,28 @@
                     "name": "",
                     "id": "f1ae54eb-b844-4106-aa37-af6ab6453943",
                     "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f00412fe-5a68-4547-8d11-5989e052757e",
+                    "path": "<Touchscreen>/touch1/indirectTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "441ab53d-2f2e-4209-96ce-198e0a303da7",
+                    "path": "<Touchscreen>/touch1/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
