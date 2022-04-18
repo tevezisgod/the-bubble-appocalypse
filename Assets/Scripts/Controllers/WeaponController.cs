@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Controllers
@@ -46,7 +47,9 @@ namespace Controllers
         }
         
         #endregion
-        
+
+        #region Weapon hit
+
         private void OnWeaponHitSomething(Collider2D col)
         {
             HitSomething(col);
@@ -61,6 +64,13 @@ namespace Controllers
             {
                 collision.GetComponent<IBallController>().PopBall();
             }    
+        }
+
+        #endregion
+        
+        private void OnDisable()
+        {
+            weaponCollider.OnWeaponHitSomething -= OnWeaponHitSomething;
         }
     }
 }

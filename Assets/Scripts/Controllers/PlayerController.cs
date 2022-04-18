@@ -45,10 +45,10 @@ namespace Controllers
         }
         private async void MovePlayer(Vector2 move)
         {
-            while (_moveButtonPressed && playerView._playerRigidbody !=null)
+            while (_moveButtonPressed && playerView.PlayerRigidbody !=null)
             {
                 _movementOrientation = move.x * GameController.Config.PlayerSpeed;
-                var playerRigidbody = playerView._playerRigidbody;
+                var playerRigidbody = playerView.PlayerRigidbody;
                 playerRigidbody.MovePosition(playerRigidbody.position + Vector2.right * (_movementOrientation * Time.fixedDeltaTime));
                 await Task.Yield();
             }

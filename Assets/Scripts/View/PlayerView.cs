@@ -6,12 +6,12 @@ public class PlayerView: MonoBehaviour
 {
     private PlayerController _playerController;
     private float _movementOrientation;
-    internal Rigidbody2D _playerRigidbody;
+    internal Rigidbody2D PlayerRigidbody { get; private set; }
 
     public void Init(PlayerController controller)
     {
         _playerController = controller;
-        _playerRigidbody = GetComponent<Rigidbody2D>();
+        PlayerRigidbody = GetComponent<Rigidbody2D>();
     }
     
     private void OnCollisionEnter2D(Collision2D collision)

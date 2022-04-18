@@ -74,7 +74,7 @@ public class GameUiView: MonoBehaviour
         while (GameController.remainingTimeInLevel > 0)
         {
             var ts = TimeSpan.FromSeconds(GameController.remainingTimeInLevel);
-            timeText.text = $"{ts.Minutes:D1}:{ts.Seconds:D2}";
+            if(timeText!=null) timeText.text = $"{ts.Minutes:D1}:{ts.Seconds:D2}";
             await Task.Yield();
         }
     }
