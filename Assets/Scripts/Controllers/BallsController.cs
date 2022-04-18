@@ -1,18 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-
 namespace Controllers
 {
-    public interface IBallsController
-    {
-        void SplitBall(float ballSize, Vector2 position);
-    }
-
-    public class BallsController: MonoBehaviour, IBallsController
+    public class BallsController: MonoBehaviour
     {
         [SerializeField] private SingleBallController ball;
         [SerializeField] private GameObject ballsParent;
@@ -21,10 +14,14 @@ namespace Controllers
          private int _ballSize;
          private int _ballAmount;
 
+         #region Events and delegates
+
          //Events
          public delegate void BallsListEmpty();
          public event BallsListEmpty OnBallsListEmpty;
 
+         #endregion
+         
          private void OnEnable()
          {
              _balls = new List<SingleBallController>();
@@ -34,7 +31,7 @@ namespace Controllers
              GameController.OnGameWon += OnGameWon;
          }
 
-         #region Public Ball Handling Methods
+         #region Ball Handling Methods
 
          private void SpawnBalls(int amount, int size)
          {
@@ -48,11 +45,11 @@ namespace Controllers
                  newBall.OnBallPopped += OnBallPopped;
                  newBall.transform.localScale = newBallSize;
                  AddBallToTracking(newBall);
-                 newBall.Init(this,force);
+                 newBall.Init(force);
              }
          }
 
-         public void SplitBall(float ballSize, Vector2 position)
+         private void SplitBall(float ballSize, Vector2 position)
          {
              var rightBall = Instantiate(ball, position + Vector2.right / 4f, Quaternion.identity);
              var leftBall = Instantiate(ball, position + Vector2.left/ 4f, Quaternion.identity);
@@ -66,11 +63,11 @@ namespace Controllers
             
              var rightBallController = rightBall;
              var rightForce = new Vector2(2, 5);
-             rightBallController.Init(this, rightForce);
+             rightBallController.Init(rightForce);
             
              var leftBallController = leftBall;
              var leftForce = new Vector2(-2, 5);
-             leftBallController.Init(this,leftForce);
+             leftBallController.Init(leftForce);
          }
          
          private void AddBallToTracking(SingleBallController addedBall)

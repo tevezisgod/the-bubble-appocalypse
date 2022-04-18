@@ -13,10 +13,14 @@ namespace Controllers
         private bool _canMove;
         private float _movementOrientation;
 
+        #region Events and delegates
+
         //events
         public delegate void PlayerHit();
         public event PlayerHit OnPlayerHit;
 
+        #endregion
+        
         internal void Init()
         {
             GameController.GameControls.Player1.Move.started += OnPlayerMoved;
@@ -35,7 +39,6 @@ namespace Controllers
         private void OnPlayerMoved(InputAction.CallbackContext callbackContext)
         {
             if (!_canMove) return;
-            if (_moveButtonPressed) return;
             _moveButtonPressed = true;
             var move = callbackContext.ReadValue<Vector2>();
             MovePlayer(move);

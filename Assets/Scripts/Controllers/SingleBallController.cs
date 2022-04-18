@@ -11,12 +11,16 @@ namespace Controllers
     public class SingleBallController : MonoBehaviour, IBallController
     {
         private Rigidbody2D _ballRigidbody;
-        
+
+        #region Events and delegates
+
         //events
         public delegate void BallPopped(SingleBallController poppedBall);
         public event BallPopped OnBallPopped;
 
-        public void Init(IBallsController controller, Vector2 startForce)
+        #endregion
+        
+        public void Init(Vector2 startForce)
         {
             //TODO: need to refactor and move some things to view class
             _ballRigidbody = GetComponent<Rigidbody2D>();

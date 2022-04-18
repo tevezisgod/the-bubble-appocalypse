@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Controllers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,9 @@ public class GameUiView: MonoBehaviour
         GameController.OnLevelWon += OnLevelWon;
         GameController.OnGameWon += OnGameWon;
     }
-    
+
+    #region Visual and audio setup
+
     private void SetupButtons(IGameController controller)
     {
         tryAgain.onClick.AddListener(controller.TryAgain);
@@ -38,7 +41,16 @@ public class GameUiView: MonoBehaviour
         returnToMainMenu.gameObject.SetActive(false);
         continueToNextLevel.gameObject.SetActive(false);
     }
+    
+    private void SetLevelView(Sprite newBackground, AudioClip music)
+    {
+        background.sprite = newBackground;
+        musicPlayer.clip = music;
+        musicPlayer.Play();
+    }
 
+    #endregion
+    
     #region UI Handling Methods
 
     private void ToggleEndScreen(bool toggle)
@@ -57,20 +69,23 @@ public class GameUiView: MonoBehaviour
         returnToMainMenu.gameObject.SetActive(toggle);
     }
 
-    #endregion
-    
-    internal void SetLevelView(Sprite newBackground, AudioClip music)
+    private async void RunTheClock()
     {
-        background.sprite = newBackground;
-        musicPlayer.clip = music;
-        musicPlayer.Play();
+        while (GameController.remainingTimeInLevel > 0)
+        {
+            var ts = TimeSpan.FromSeconds(GameController.remainingTimeInLevel);
+            timeText.text = $"{ts.Minutes:D1}:{ts.Seconds:D2}";
+            await Task.Yield();
+        }
     }
+
+    #endregion
     
     #region Event Listeners
 
     private void OnGameWon()
     {
-        Debug.Log("No implementation yet");
+        Debug.Log("No implementation yet. Might put confetti or fireworks");
     }
 
     private void OnLevelWon()
@@ -85,9 +100,11 @@ public class GameUiView: MonoBehaviour
 
     private void OnLevelStarted(int level)
     {
+        SetLevelView( GameController.CurrentLevelConfig.LevelBackground,GameController.CurrentLevelConfig.LevelMusic);
         ToggleRestartScreen(false);
         ToggleEndScreen(false);
         levelText.text = "Level " + (level+1);
+        RunTheClock();
     }
 
     #endregion

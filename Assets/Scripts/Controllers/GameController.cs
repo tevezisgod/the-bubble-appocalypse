@@ -18,22 +18,26 @@ namespace Controllers
         [SerializeField] private BallsController ballsController;
         [SerializeField] private PlayerController player;
 
-        //Static global objects
-        public static Controls GameControls;
-        public static GameConfig Config;
+        //Static global data holders
+        public static Controls GameControls { get; private set; }
+        public static GameConfig Config { get; private set; } 
+        public static LevelConfig CurrentLevelConfig { get; private set;}
         
         //private internal variables
         private bool _gameIsFinished;
+        
+        //current level data
         private int _currentPlayerLevel;
         private int _levelAmount;
+        internal static float remainingTimeInLevel { get; private set; }
         
         //reference to view
         private GameUiView _gameUiView;
-        
-        //reference to the current level config
-        public static LevelConfig CurrentLevelConfig { get; private set;}
+
+        #region Events And Delegates
 
         //events
+        
         public delegate void LevelStarted(int level);
         public static event LevelStarted OnLevelStarted;
 
@@ -45,6 +49,8 @@ namespace Controllers
 
         public delegate void GameWon();
         public static event GameWon OnGameWon;
+        
+        #endregion
         
         public void Init(GameDataModel model,GameUiView view)
         {
@@ -90,7 +96,6 @@ namespace Controllers
         private void GetLevelData()
         {
             CurrentLevelConfig = Config.Levels[_currentPlayerLevel];
-            _gameUiView.SetLevelView( CurrentLevelConfig.LevelBackground,CurrentLevelConfig.LevelMusic);
             RunLevel();
         }
         
@@ -102,8 +107,7 @@ namespace Controllers
             {
                 if (_gameIsFinished) return;
                 levelTime -= Time.deltaTime;
-                var ts = TimeSpan.FromSeconds(levelTime);
-                if(_gameUiView!=null) _gameUiView.timeText.text = $"{ts.Minutes:D1}:{ts.Seconds:D2}";
+                remainingTimeInLevel = levelTime;
                 await Task.Yield();
             }
             LevelFailed();
@@ -117,7 +121,7 @@ namespace Controllers
 
         #endregion
 
-        #region Public Methods
+        #region Public User Input Methods
 
         public void TryAgain()
         {
@@ -138,7 +142,6 @@ namespace Controllers
             if (_currentPlayerLevel < Config.Levels.Length-1)
             {
                 _currentPlayerLevel++;
-                Debug.Log("current level incremented");
                 GetLevelData();
             }
             else

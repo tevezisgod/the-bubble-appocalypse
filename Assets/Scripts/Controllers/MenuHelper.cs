@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Controllers
 {
-    //thi class is a temporary measure to allow navigation between scenes (The start and end menus were added last)
+    //this class is a temporary measure to allow navigation between scenes (The start and end menus were added last)
     //the game controls should, of course, be initialized once
     public class MenuHelper:  MonoBehaviour
     {
