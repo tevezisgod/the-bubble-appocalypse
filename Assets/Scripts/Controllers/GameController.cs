@@ -29,6 +29,8 @@ namespace Controllers
         
         //reference to view
         private GameUiView _gameUiView;
+        
+        //reference to the current level config
         public static LevelConfig CurrentLevelConfig { get; private set;}
 
         //events
