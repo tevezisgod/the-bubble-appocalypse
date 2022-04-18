@@ -44,17 +44,10 @@ namespace Controllers
             while (MoveButtonPressed && playerView._playerRigidbody !=null)
             {
                 _movementOrientation = move.x * GameController.Config.PlayerSpeed;
-                var playerViewPlayerRigidbody = playerView._playerRigidbody;
-                playerViewPlayerRigidbody.MovePosition(playerViewPlayerRigidbody.position + Vector2.right * (_movementOrientation * Time.fixedDeltaTime));
+                var playerRigidbody = playerView._playerRigidbody;
+                playerRigidbody.MovePosition(playerRigidbody.position + Vector2.right * (_movementOrientation * Time.fixedDeltaTime));
                 await Task.Yield();
 
-            }
-        }
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.collider.CompareTag(GameController.Config.BallTagName))
-            {
-                PlayerWasHit();
             }
         }
 
@@ -69,7 +62,18 @@ namespace Controllers
             var pos = playerView.transform.position;
             weaponController.HandleFire(pos);
         }
-        
+
+        #endregion
+
+        #region Player Damage
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.collider.CompareTag(GameController.Config.BallTagName))
+            {
+                PlayerWasHit();
+            }
+        }
         internal void PlayerWasHit()
         {
             OnOnPlayerHit();
