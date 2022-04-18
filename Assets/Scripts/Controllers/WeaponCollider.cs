@@ -6,13 +6,17 @@ namespace Controllers
     {
         private WeaponController _weaponController;
 
-        public void Init(WeaponController weaponController)
-        {
-            _weaponController = weaponController;
-        }
+        public delegate void WeaponHitSomething(Collider2D col);
+        public event WeaponHitSomething OnWeaponHitSomething;
+        
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            _weaponController.HitSomething(collision);
+            OnOnWeaponHitSomething(collision);
+        }
+
+        protected virtual void OnOnWeaponHitSomething(Collider2D col)
+        {
+            OnWeaponHitSomething?.Invoke(col);
         }
     }
 }

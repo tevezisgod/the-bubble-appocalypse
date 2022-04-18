@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameUiView: MonoBehaviour
 {
     [Header("Text fields")]
-    [SerializeField] internal Text timeText;
+    [SerializeField] private Text timeText;
     [SerializeField] private Text gameOverText;
     [SerializeField] private Text winText;
     [SerializeField] private Text levelText;

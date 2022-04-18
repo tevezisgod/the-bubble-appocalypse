@@ -14,6 +14,7 @@ namespace Controllers
         public void Init()
         {
             _weaponSpeed = GameController.Config.WeaponSpeed;
+            weaponCollider.OnWeaponHitSomething += OnWeaponHitSomething;
         }
 
         #region Weapon Usage handling
@@ -29,7 +30,6 @@ namespace Controllers
             _isFiring = true;
             _playerPosition = position;
             StartFiring();
-            weaponCollider.Init(this);
             while (_isFiring)
             {
                 Proceed();
@@ -46,9 +46,14 @@ namespace Controllers
         }
         
         #endregion
+        
+        private void OnWeaponHitSomething(Collider2D col)
+        {
+            HitSomething(col);
+        }
 
         //this method needs to be refactored to fire an event
-        internal void HitSomething(Collider2D collision)
+        private void HitSomething(Collider2D collision)
         {
             _isFiring = false;
             
