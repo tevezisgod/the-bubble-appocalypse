@@ -22,5 +22,3 @@ Thank you so much
 Hope to hear from you soon
 
 Who do I talk to?
-
-Doron Kanaan tevezisgod@gmail.com 0544-742431
