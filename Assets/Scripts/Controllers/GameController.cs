@@ -60,7 +60,6 @@ namespace Controllers
             SetResolution();
             SetInputControls();
             GenerateGame();
-            ballsController.OnBallsListEmpty += NoMoreBallsOnScreen;
         }
 
         #region Game Setup and Initiation

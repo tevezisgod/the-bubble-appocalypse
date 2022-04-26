@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Data.EventsHandler;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,29 +10,22 @@ namespace Controllers
     {
         [SerializeField] private WeaponController weaponController;
         [SerializeField] private PlayerView playerView;
-        
-        private bool _moveButtonPressed;
-        private bool _canMove;
-        private float _movementOrientation;
+        private bool MoveButtonPressed { get; set; }
+        private bool m_CanMove;
+        private float m_MovementOrientation;
 
-        #region Events and delegates
-
-        //events
-        public delegate void PlayerHit();
-        public event PlayerHit OnPlayerHit;
-
-        #endregion
-        
         internal void Init()
         {
             GameController.GameControls.Player1.Move.started += OnPlayerMoved;
             GameController.GameControls.Player1.Move.canceled += OnPlayerStopped;
             GameController.GameControls.Player1.Fire.started += OnFirePressed;
             GameController.GameControls.Player1.Quit.performed += OnPlayerQuit;
-            GameController.OnLevelStarted += OnLevelStarted;
-            GameController.OnLevelLost += OnLevelLost;
-            GameController.OnLevelWon += OnLevelWon;
-            GameController.OnGameWon += OnGameWon;
+            
+            EventsHandler.StartListening(EventsHandler.EventNames.ONLevelStarted,OnLevelStarted);
+            EventsHandler.StartListening(EventsHandler.EventNames.ONLevelLost,OnLevelLost);
+            EventsHandler.StartListening(EventsHandler.EventNames.ONLevelWon,OnLevelWon);
+            EventsHandler.StartListening(EventsHandler.EventNames.ONGameWon,OnGameWon);
+            
             playerView.Init(this);
         }
 
@@ -38,48 +33,38 @@ namespace Controllers
 
         private void OnPlayerMoved(InputAction.CallbackContext callbackContext)
         {
-            if (!_canMove) return;
-            _moveButtonPressed = true;
+            if (!m_CanMove) return;
+            if (MoveButtonPressed) return;
+            MoveButtonPressed = true;
             var move = callbackContext.ReadValue<Vector2>();
             MovePlayer(move);
         }
         private async void MovePlayer(Vector2 move)
         {
-            while (_moveButtonPressed && playerView.PlayerRigidbody !=null)
+            while (MoveButtonPressed && playerView._playerRigidbody !=null)
             {
-                _movementOrientation = move.x * GameController.Config.PlayerSpeed;
-                var playerRigidbody = playerView.PlayerRigidbody;
-                playerRigidbody.MovePosition(playerRigidbody.position + Vector2.right * (_movementOrientation * Time.fixedDeltaTime));
+                m_MovementOrientation = move.x * GameController.Config.PlayerSpeed;
+                var playerViewPlayerRigidbody = playerView._playerRigidbody;
+                playerViewPlayerRigidbody.MovePosition(playerViewPlayerRigidbody.position + Vector2.right * (m_MovementOrientation * Time.fixedDeltaTime));
                 await Task.Yield();
             }
         }
 
         private void OnPlayerStopped(InputAction.CallbackContext callbackContext)
         {
-            if(_moveButtonPressed) _moveButtonPressed = false;
+            if(MoveButtonPressed) MoveButtonPressed = false;
         }
         
         private void OnFirePressed(InputAction.CallbackContext obj)
         {
-            if (!_canMove) return;
-            var pos = playerView.transform.position;
+            if (!m_CanMove) return;
+            var pos = playerView._playerRigidbody.position;
             weaponController.HandleFire(pos);
         }
-
-        #endregion
-
-        #region Player Damage
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.collider.CompareTag(GameController.Config.BallTagName))
-            {
-                PlayerWasHit();
-            }
-        }
+        
         internal void PlayerWasHit()
         {
-            OnOnPlayerHit();
+            EventsHandler.TriggerEvent(EventsHandler.EventNames.ONPlayerHit);
         }
 
         #endregion
@@ -88,36 +73,27 @@ namespace Controllers
 
         private void OnLevelWon()
         {
-            _canMove = false;
+            m_CanMove = false;
         }
 
         private void OnLevelLost()
         {
-            _canMove = false;
+            m_CanMove = false;
         }
 
-        private void OnLevelStarted(int level)
+        private void OnLevelStarted()
         {
-            _canMove = true;
-            weaponController.Init();
+            m_CanMove = true;
+            playerView.Animator.SetTrigger(GameController.Config.PlayerLiveAnimation);
         }
         
         private void OnGameWon()
         {
-            _canMove = false;
+            m_CanMove = false;
         }
         private void OnPlayerQuit(InputAction.CallbackContext obj)
         {
             Application.Quit();
-        }
-
-        #endregion
-
-        #region Event Invokers
-
-        protected virtual void OnOnPlayerHit()
-        {
-            OnPlayerHit?.Invoke();
         }
 
         #endregion
@@ -127,10 +103,10 @@ namespace Controllers
             GameController.GameControls.Player1.Move.started -= OnPlayerMoved;
             GameController.GameControls.Player1.Move.canceled -= OnPlayerStopped;
             GameController.GameControls.Player1.Fire.started -= OnFirePressed;
-            GameController.OnLevelStarted -= OnLevelStarted;
-            GameController.OnLevelLost -= OnLevelLost;
-            GameController.OnLevelWon -= OnLevelWon;
-            GameController.OnGameWon -= OnGameWon;
+            EventsHandler.StopListening(EventsHandler.EventNames.ONLevelStarted,OnLevelStarted);
+            EventsHandler.StopListening(EventsHandler.EventNames.ONLevelLost,OnLevelLost);
+            EventsHandler.StopListening(EventsHandler.EventNames.ONLevelWon,OnLevelWon);
+            EventsHandler.StopListening(EventsHandler.EventNames.ONGameWon,OnGameWon);
         }
     }
 }
